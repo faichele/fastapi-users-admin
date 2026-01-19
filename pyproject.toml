@@ -1,0 +1,32 @@
+# pyproject.toml
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastapi-users-admin"
+version = "0.0.2"
+description = "A FastAPI library for user administration and management"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "Fabian Aichele", email = "aichele@zykl.io" }]
+keywords = ["fastapi", "library", "user-management", "admin"]
+dependencies = [
+    "pydantic>=2.7,<3",
+    "fastapi>=0.100.0",
+    "sqlalchemy>=2.0",
+    "python-multipart>=0.0.5",
+    "jinja2>=3.1.0",
+    "bcrypt>=4.0.0",
+    "fastapi-users-auth"
+]
+optional-dependencies = { dev = ["pytest", "pytest-cov", "mypy", "ruff", "build", "twine"] }
+
+[project.urls]
+Homepage = "https://github.com/faichele/users_admin"
+Repository = "https://github.com/faichele/users_admin.git"
+
+[tool.setuptools]
+packages = ["fastapi_users_admin"]
+package-dir = {"fastapi_users_admin" = "."}

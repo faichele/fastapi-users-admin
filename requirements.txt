@@ -1,0 +1,22 @@
+# Core dependencies
+fastapi>=0.100.0
+pydantic>=2.7,<3
+sqlalchemy>=2.0
+python-multipart>=0.0.5
+
+# Security
+passlib>=1.7.4
+bcrypt>=4.0.0
+
+# Templates
+jinja2>=3.1.0
+
+# Email (optional)
+# aiosmtplib>=2.0.0
+
+# Development dependencies
+pytest>=7.4.0
+pytest-cov>=4.1.0
+mypy>=1.5.0
+ruff>=0.0.290
+
