@@ -326,7 +326,7 @@ Fabian Aichele <aichele@zykl.io>
 ## Support
 
 Bei Fragen oder Problemen:
-- Siehe [INSTALL.md](INSTALL.md) für Installationsanleitungen
+- Siehe [INSTALL.md](docs/INSTALL.md) für Installationsanleitungen
 - Siehe [examples/](examples/) für Integrations-Beispiele
 - Siehe [../README_authentication.md](../../docs/backend/dependencies/README_authentication_multi.md) für Gesamtübersicht
 - E-Mail: aichele@zykl.io

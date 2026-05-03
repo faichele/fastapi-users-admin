@@ -99,7 +99,7 @@ class AdminDependencies:
             # Check if superuser
             if not current_user.is_superuser:
                 return RedirectResponse(
-                    url="/login?message=Access%20denied",
+                    url="/api//login?message=Access%20denied",
                     status_code=HTTP_302_FOUND
                 )
 

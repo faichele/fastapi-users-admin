@@ -107,7 +107,8 @@ class UserAdminRouter:
                 {
                     "request": request,
                     "title": "Benutzerverwaltung",
-                    "user": current_user
+                    "user": current_user,
+                    "api_prefix": self.config.api_prefix
                 }
             )
 

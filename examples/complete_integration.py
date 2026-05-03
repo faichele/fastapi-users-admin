@@ -134,7 +134,7 @@ def superuser_or_redirect(
 
         if not token:
             return RedirectResponse(
-                url=f"/login?next={request.url.path}",
+                url=f"/api/login?next={request.url.path}",
                 status_code=HTTP_302_FOUND
             )
 
@@ -153,7 +153,7 @@ def superuser_or_redirect(
         return current_user
     except Exception:
         return RedirectResponse(
-            url=f"/login?next={request.url.path}",
+            url=f"/api/login?next={request.url.path}",
             status_code=HTTP_302_FOUND
         )
 

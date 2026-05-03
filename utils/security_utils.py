@@ -13,11 +13,11 @@ class SecurityUtils:
     """
 
     def __init__(self):
-        self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        self.pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
     def get_password_hash(self, password: str) -> str:
         """
-        Hasht ein Passwort mit bcrypt.
+        Hasht ein Passwort mit Argon2.
 
         Args:
             password: Das zu hashende Passwort
@@ -39,4 +39,3 @@ class SecurityUtils:
             True wenn das Passwort korrekt ist, sonst False
         """
         return self.pwd_context.verify(plain_password, hashed_password)
-

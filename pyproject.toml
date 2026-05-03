@@ -28,5 +28,16 @@ Homepage = "https://github.com/faichele/users_admin"
 Repository = "https://github.com/faichele/users_admin.git"
 
 [tool.setuptools]
-packages = ["fastapi_users_admin"]
+packages = [
+    "fastapi_users_admin",
+    "fastapi_users_admin.config",
+    "fastapi_users_admin.dependencies",
+    "fastapi_users_admin.models",
+    "fastapi_users_admin.routers",
+    "fastapi_users_admin.services",
+    "fastapi_users_admin.utils"
+]
 package-dir = {"fastapi_users_admin" = "."}
+
+[tool.setuptools.package-data]
+fastapi_users_auth = ["templates/*.html"]
