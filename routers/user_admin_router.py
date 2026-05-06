@@ -103,8 +103,9 @@ class UserAdminRouter:
                 return current_user
 
             return self.templates.TemplateResponse(
-                "admin_users.html",
-                {
+                request=request,
+                name="admin_users.html",
+                context={
                     "request": request,
                     "title": "Benutzerverwaltung",
                     "user": current_user,
