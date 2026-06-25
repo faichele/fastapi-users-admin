@@ -9,6 +9,8 @@ from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
+from fastapi_users_auth.models.user_models import UserRole
+
 
 class UserAdminBase(BaseModel):
     """Basis-Modell für Benutzerdaten."""
@@ -34,12 +36,13 @@ class UserAdminUpdate(BaseModel):
 
 class UserAdminPublic(UserAdminBase):
     """Öffentliches Benutzermodell (ohne Passwort)."""
-    uuid: uuid.UUID
+    id: uuid.UUID = Field(..., serialization_alias="uuid")
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     last_login: Optional[datetime] = None
+    role: UserRole = UserRole.USER
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 
 class UserAdminList(BaseModel):

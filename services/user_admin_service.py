@@ -32,7 +32,7 @@ class UserAdminService(BaseUserAdminService):
     def get_user_by_id(self, user_id: uuid.UUID) -> Optional[Any]:
         """Ruft einen Benutzer anhand seiner ID ab."""
         return self.session.query(self.user_model).filter(
-            self.user_model.id == user_id
+            self.user_model.id == str(user_id)
         ).first()
 
     def get_user_by_email(self, email: str) -> Optional[Any]:
@@ -59,7 +59,7 @@ class UserAdminService(BaseUserAdminService):
 
         # Create user instance
         user = self.user_model(
-            id=uuid.uuid4(),
+            id=str(uuid.uuid4()),
             email=user_data.email,
             full_name=user_data.full_name,
             is_active=user_data.is_active,

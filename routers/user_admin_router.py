@@ -30,7 +30,7 @@ from fastapi_users_auth.dependencies.auth_deps import (
     get_current_user as get_current_user_provider,
     get_current_active_superuser as get_current_superuser_provider,
 )
-from packages.fastapi_users_auth.models.user_models import User
+from fastapi_users_auth.models.user_models import User
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -93,7 +93,7 @@ class UserAdminRouter:
         """Registriert alle Routen."""
 
         # HTML Admin Page
-        @self.router.get("/admin", response_class=HTMLResponse)
+        @self.router.get("/admin/users", response_class=HTMLResponse)
         async def users_admin_page(
             request: Request,
             current_user = Depends(self.superuser_or_redirect)
@@ -103,9 +103,9 @@ class UserAdminRouter:
                 return current_user
 
             return self.templates.TemplateResponse(
-                "admin_users.html",
-                {
-                    "request": request,
+                name="admin_users.html",
+                request=request,
+                context={
                     "title": "Benutzerverwaltung",
                     "user": current_user,
                     "api_prefix": self.config.api_prefix
@@ -304,7 +304,7 @@ class UserAdminRouter:
             # Check email uniqueness
             if user_in.email:
                 existing_user = service.get_user_by_email(user_in.email)
-                if existing_user and existing_user.uuid != user_id:
+                if existing_user and existing_user.id != str(user_id):
                     raise HTTPException(
                         status_code=409,
                         detail="User with this email already exists"

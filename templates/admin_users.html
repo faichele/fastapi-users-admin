@@ -466,6 +466,8 @@
         const userId = formData.get('user_id');
         const userData = {
           email: formData.get('email'),
+          // Use mail address as login
+          login: formData.get('email'),
           full_name: formData.get('full_name'),
           is_superuser: formData.get('is_superuser') === 'on',
           is_active: formData.get('is_active') === 'on'

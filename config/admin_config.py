@@ -2,15 +2,19 @@
 Konfiguration für das Benutzerverwaltungsmodul.
 """
 
+from pathlib import Path
 from typing import Optional
 from pydantic import BaseModel
+
+# Absoluter Pfad zum templates/-Verzeichnis dieses Pakets
+_DEFAULT_TEMPLATES_DIR = str(Path(__file__).resolve().parent.parent / "templates")
 
 
 class AdminConfig(BaseModel):
     """Konfigurationsklasse für Benutzerverwaltung."""
 
-    # Template-Verzeichnis
-    templates_dir: str = "backend/fastapi_users_admin/templates"
+    # Template-Verzeichnis – standardmäßig das templates/-Verzeichnis des Moduls
+    templates_dir: str = _DEFAULT_TEMPLATES_DIR
 
     # API-Präfix
     api_prefix: str = "/api"
