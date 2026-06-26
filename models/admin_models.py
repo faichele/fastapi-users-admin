@@ -40,7 +40,7 @@ class UserAdminPublic(UserAdminBase):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     last_login: Optional[datetime] = None
-    role: UserRole = UserRole.USER
+    role: UserRole = UserRole.user
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
