@@ -20,8 +20,8 @@ dependencies = [
     "jinja2>=3.1.0",
     "bcrypt>=4.0.0",
     "fastapi-users-auth",
-    "fastapi-logging-manager @ git+https://github.com/faichele/fastapi-logging-manager",
-    "fastapi-users-auth @ git+https://github.com/faichele/fastapi-users-auth"
+    "fastapi-logging-manager @ git+https://github.com/faichele/fastapi-logging-manager.git",
+    "fastapi-users-auth @ git+https://github.com/faichele/fastapi-users-auth.git"
 ]
 optional-dependencies = { dev = ["pytest", "pytest-cov", "mypy", "ruff", "build", "twine"] }
 
