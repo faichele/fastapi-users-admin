@@ -343,27 +343,29 @@ class UserAdminRouter:
 
             return Message(message="User deleted successfully")
 
-        # User Signup (public endpoint)
-        @self.router.post("/users/signup", response_model=UserAdminPublic)
-        def register_user(
-            user_in: UserAdminCreate,
-            session: Session = Depends(self.database_session)
-        ) -> Any:
-            """Registriert einen neuen Benutzer (öffentlicher Endpunkt)."""
-            service = UserAdminService(session, self.user_model, self.security_utils)
+        # User Signup (public endpoint) — only registered when enabled in config
+        if self.config.enable_signup:
 
-            # Check if user exists
-            existing_user = service.get_user_by_email(user_in.email)
-            if existing_user:
-                raise HTTPException(
-                    status_code=400,
-                    detail="The user with this email already exists in the system"
-                )
+            @self.router.post("/users/signup", response_model=UserAdminPublic)
+            def register_user(
+                user_in: UserAdminCreate,
+                session: Session = Depends(self.database_session)
+            ) -> Any:
+                """Registriert einen neuen Benutzer (öffentlicher Endpunkt)."""
+                service = UserAdminService(session, self.user_model, self.security_utils)
 
-            # Force inactive and non-superuser for public registration
-            user_in.is_active = False
-            user_in.is_superuser = False
+                # Check if user exists
+                existing_user = service.get_user_by_email(user_in.email)
+                if existing_user:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="The user with this email already exists in the system"
+                    )
 
-            user = service.create_user(user_in)
-            return UserAdminPublic.model_validate(user)
+                # Force inactive and non-superuser for public registration
+                user_in.is_active = False
+                user_in.is_superuser = False
+
+                user = service.create_user(user_in)
+                return UserAdminPublic.model_validate(user)
 

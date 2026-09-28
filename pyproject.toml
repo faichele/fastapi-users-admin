@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fastapi-users-admin"
-version = "0.0.2"
+version = "0.0.5"
 description = "A FastAPI library for user administration and management"
 readme = "README.md"
 requires-python = ">=3.9"

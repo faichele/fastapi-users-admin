@@ -19,6 +19,11 @@ class AdminConfig(BaseModel):
     # API-Präfix
     api_prefix: str = "/api"
 
+    # Öffentliche Selbstregistrierung (POST /users/signup). Deaktivieren für
+    # Invite-only-Deployments, bei denen Accounts nur über die Admin-Endpunkte
+    # angelegt werden dürfen.
+    enable_signup: bool = True
+
     # Router-Tags
     router_tags: list = ["users", "admin"]
 
