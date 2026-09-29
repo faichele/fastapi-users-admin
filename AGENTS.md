@@ -93,3 +93,17 @@ Template-Auslieferung.
   verschleiert.
 - Keine Tokens, Passwoerter oder kompletten User-Objekte mit sensiblen Feldern loggen.
 - Keine manuellen Aenderungen an `.idea`-, Cache- oder Build-Dateien.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues for `faichele/fastapi-users-admin`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Uses the default five canonical triage labels. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Uses the single-context layout. See `docs/agents/domain.md`.
