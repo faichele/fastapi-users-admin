@@ -28,7 +28,7 @@ from .services.user_admin_service import UserAdminService
 from .routers.user_admin_router import UserAdminRouter
 from .config.admin_config import AdminConfig
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 __all__ = [
     # Models

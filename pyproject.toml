@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fastapi-users-admin"
-version = "0.0.8"
+version = "0.0.9"
 description = "A FastAPI library for user administration and management"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -41,4 +41,4 @@ packages = [
 package-dir = {"fastapi_users_admin" = "."}
 
 [tool.setuptools.package-data]
-fastapi_users_auth = ["templates/*.html"]
+fastapi_users_admin = ["templates/*.html"]
