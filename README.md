@@ -249,6 +249,27 @@ admin_router = UserAdminRouter(
 )
 ```
 
+### Eigene Passwortregeln
+
+Passwortregeln werden nicht in den Pydantic-Modellen, sondern über einen optionalen
+`password_validator` geprüft. Er wird beim Anlegen, bei der Registrierung, bei
+`PATCH /users/{user_id}`, `PATCH /users/me` und `PATCH /users/me/password` aufgerufen und
+erhält `(session, plain_password, user)` (`user` ist beim Anlegen `None`). Er gibt eine
+Liste von Regelverletzungen zurück; ist sie nicht leer, antwortet der Endpunkt mit
+HTTP 400 und den Meldungen (durch `; ` getrennt) als `detail`.
+
+```python
+def my_password_rules(session, password, user=None) -> list[str]:
+    return [] if len(password) >= 12 else ["Password too short"]
+
+admin_router = UserAdminRouter(
+    # ...
+    password_validator=my_password_rules,
+)
+```
+
+Ohne eigenen Validator gilt `default_password_validator` (Mindestlänge 8 Zeichen).
+
 ## Testen
 
 ### Unit-Tests ausführen

@@ -8,7 +8,7 @@ einschließlich CRUD-Operationen und Admin-Interface.
 import logging
 
 import uuid
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -39,6 +39,24 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+# Signatur: (session, plain_password, user | None) -> Liste von Regelverletzungen
+# (leere Liste = Passwort gültig). ``user`` ist None beim Anlegen neuer Benutzer.
+PasswordValidator = Callable[[Session, str, Optional[Any]], list[str]]
+
+DEFAULT_PASSWORD_MIN_LENGTH = 8
+
+
+def default_password_validator(session: Session, password: str, user: Optional[Any] = None) -> list[str]:
+    """Standard-Passwortprüfung: nur Mindestlänge (DEFAULT_PASSWORD_MIN_LENGTH)."""
+    if len(password) < DEFAULT_PASSWORD_MIN_LENGTH:
+        msg = (
+            f"Password too short (expected at least {DEFAULT_PASSWORD_MIN_LENGTH} characters, "
+            f"found {len(password)})"
+        )
+        return [msg]
+    return []
+
+
 class UserAdminRouter:
     """
     Router-Klasse für Benutzerverwaltung.
@@ -54,7 +72,8 @@ class UserAdminRouter:
         config: Optional[AdminConfig] = None,
         user_model=None,
         security_utils=None,
-        superuser_or_redirect=None
+        superuser_or_redirect=None,
+        password_validator: Optional[PasswordValidator] = None
     ):
         """
         Initialisiert den Router.
@@ -66,12 +85,15 @@ class UserAdminRouter:
             user_model: SQLAlchemy User Model
             security_utils: SecurityUtils Instanz
             superuser_or_redirect: Dependency für HTML-Seiten
+            password_validator: Optionale Passwortprüfung (siehe ``PasswordValidator``).
+                Standard: ``default_password_validator`` (Mindestlänge 8).
         """
         self.database_session = database_session
         self.config = config or AdminConfig()
         self.user_model = user_model
         self.security_utils = security_utils
         self.superuser_or_redirect = superuser_or_redirect
+        self.password_validator = password_validator or default_password_validator
 
         # Dependencies korrekt initialisieren
         self.get_current_user_dep = get_current_user_provider(auth_deps)
@@ -88,6 +110,12 @@ class UserAdminRouter:
 
         # Routen registrieren
         self._register_routes()
+
+    def _validate_password(self, session: Session, password: str, user: Optional[Any] = None) -> None:
+        """Prüft ein Passwort mit dem konfigurierten Validator; HTTP 400 bei Regelverletzungen."""
+        errors = self.password_validator(session, password, user)
+        if errors:
+            raise HTTPException(status_code=400, detail="; ".join(errors))
 
     def _register_routes(self):
         """Registriert alle Routen."""
@@ -147,6 +175,7 @@ class UserAdminRouter:
                     detail="The user with this email already exists in the system."
                 )
 
+            self._validate_password(session, user_in.password)
             user = service.create_user(user_in)
             return UserAdminPublic.model_validate(user)
 
@@ -188,6 +217,9 @@ class UserAdminRouter:
             if user_in.is_superuser is not None:
                 user_in.is_superuser = current_user.is_superuser
 
+            if user_in.password is not None:
+                self._validate_password(session, user_in.password, current_user)
+
             updated_user = service.update_user(current_user.uuid, user_in)
             return UserAdminPublic.model_validate(updated_user)
 
@@ -222,6 +254,8 @@ class UserAdminRouter:
                     status_code=400,
                     detail="New password cannot be the same as the current one"
                 )
+
+            self._validate_password(session, password_data.new_password, db_user)
 
             success = service.update_password(db_user.uuid, password_data.new_password)
             if not success:
@@ -310,6 +344,9 @@ class UserAdminRouter:
                         detail="User with this email already exists"
                     )
 
+            if user_in.password is not None:
+                self._validate_password(session, user_in.password, db_user)
+
             updated_user = service.update_user(user_id, user_in)
             return UserAdminPublic.model_validate(updated_user)
 
@@ -364,6 +401,7 @@ class UserAdminRouter:
             user_in.is_active = False
             user_in.is_superuser = False
 
+            self._validate_password(session, user_in.password)
             user = service.create_user(user_in)
             return UserAdminPublic.model_validate(user)
 

@@ -21,15 +21,19 @@ class UserAdminBase(BaseModel):
 
 
 class UserAdminCreate(UserAdminBase):
-    """Modell zum Erstellen eines neuen Benutzers."""
-    password: str = Field(..., min_length=8)
+    """Modell zum Erstellen eines neuen Benutzers.
+
+    Passwortregeln werden nicht im Schema, sondern über den
+    ``password_validator`` des ``UserAdminRouter`` geprüft.
+    """
+    password: str
 
 
 class UserAdminUpdate(BaseModel):
     """Modell zum Aktualisieren von Benutzerdaten."""
     email: Optional[EmailStr] = None
     full_name: Optional[str] = None
-    password: Optional[str] = Field(None, min_length=8)
+    password: Optional[str] = None
     is_active: Optional[bool] = None
     is_superuser: Optional[bool] = None
 
@@ -65,7 +69,7 @@ class PasswordResetConfirm(BaseModel):
 class PasswordChange(BaseModel):
     """Modell für Passwortänderung durch den Benutzer selbst."""
     current_password: str
-    new_password: str = Field(..., min_length=8)
+    new_password: str
 
 
 class Message(BaseModel):
